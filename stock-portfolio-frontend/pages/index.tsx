@@ -5,7 +5,7 @@ export default function ChecksRedirect() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  let res = await fetch("http://localhost:3000/api/user");
+  let res = await fetch(`${process.env.FRONTEND_SERVER_URL}/api/user`);
   let user = await res.json();
   if (user.isLogin) {
     return { redirect: { destination: "/portfolio", statusCode: 301 } };

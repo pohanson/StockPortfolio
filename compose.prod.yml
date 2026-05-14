@@ -1,0 +1,4 @@
+name: stock-portfolio-prod
+include:
+  - stock-portfolio-backend/compose.prod.yml
+  - stock-portfolio-frontend/compose.prod.yml

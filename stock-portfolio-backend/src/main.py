@@ -19,4 +19,4 @@ app.wsgi_app = middleware(app.wsgi_app)
 CORS(app, supports_credentials=True, origin="127.0.0.1")
 
 app.register_blueprint(api_bp)
-app.run(host="0.0.0.0", debug=os.getenv("DEVELOPMENT_MODE", False))
+app.run(host="0.0.0.0", debug=os.getenv("FLASK_ENV", False) == "development")

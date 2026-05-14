@@ -1,0 +1,32 @@
+name: stock-portfolio-backend-dev
+services:
+  backend:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - MONGO_URI=mongodb://mongodb:27017/stock_portfolio_dev
+    volumes:
+      - ./data:/data
+    depends_on:
+      - mongodb
+    develop:
+      watch:
+        - path: ./src
+          action: sync
+          target: /src
+        - path: ./requirements.txt
+          action: rebuild
+          target: /src/requirements.txt
+        - path: ./Dockerfile
+          action: rebuild
+        - path: ./compose.dev.yml
+          action: rebuild
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./data/db:/data/db

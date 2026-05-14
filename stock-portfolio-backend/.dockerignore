@@ -1,5 +1,5 @@
 venv/
 mongodb/
 __pycache__/
-ses_user.json
+src/server/auth/ses_user.json
 data/db

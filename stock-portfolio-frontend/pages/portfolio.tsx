@@ -13,6 +13,7 @@ export default function PortfolioPage() {
     fetch("/api/portfolio")
       .then((r) => r.json())
       .then((r) => {
+        // TODO: only redirect unauthenticated user.
         if ("error" in r) {
           router.replace("/login");
         } else {

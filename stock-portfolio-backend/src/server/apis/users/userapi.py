@@ -41,11 +41,13 @@ def user_login():
                 str(result["_id"])
             )
             result.pop("_id")
+            return jsonify(result), 200
+        else:
+            raise VerifyMismatchError("Incorrect Login Credentials")
 
     except (ValueError, VerifyMismatchError) as e:
         print(e)
         return jsonify({"error": "Incorrect Login Credentials"}), 401
-    return jsonify(result), 200
 
 
 @user_api_bp.get("/logout")

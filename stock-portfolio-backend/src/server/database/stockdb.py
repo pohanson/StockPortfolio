@@ -2,6 +2,7 @@ from typing import Union
 
 from pymongo import MongoClient
 
+from .mongo_client import get_mongo_client
 
 class _StockDb:
     def __init__(self, client: MongoClient):
@@ -19,4 +20,4 @@ class _StockDb:
         return self.coll.find_one({"_id": stock_code})
 
 
-stockdb = _StockDb(MongoClient())
+stockdb = _StockDb(get_mongo_client())

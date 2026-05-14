@@ -9,7 +9,7 @@ from pymongo import MongoClient
 from pymongo.results import UpdateResult
 
 from server.model.transaction import Transaction
-
+from .mongo_client import get_mongo_client
 
 class _TransactionDb:
     def __init__(self, client: MongoClient):
@@ -50,9 +50,7 @@ class _TransactionDb:
         Returns:
             UpdateResult
         """
-        return self.coll.update_one(
-            {"_id": transaction_id}, {"$set": data.to_dict()}
-        )
+        return self.coll.update_one({"_id": transaction_id}, {"$set": data.to_dict()})
 
     def upsert_one_transaction(
         self,
@@ -98,9 +96,7 @@ class _TransactionDb:
         Returns:
             Transaction: the transaction that was deleted
         """
-        deleted_transaction = self.coll.find_one_and_delete(
-            {"_id": transaction_id}
-        )
+        deleted_transaction = self.coll.find_one_and_delete({"_id": transaction_id})
         if deleted_transaction is None:
             return
         # update last_modified to now
@@ -122,9 +118,7 @@ class _TransactionDb:
         """
         data = [
             Transaction.from_dict(record)
-            for record in self.coll.find(filter_dict).sort(
-                "date", pymongo.ASCENDING
-            )
+            for record in self.coll.find(filter_dict).sort("date", pymongo.ASCENDING)
         ]
         return data
 
@@ -179,4 +173,4 @@ class _TransactionDb:
         return "".join(secrets.choice(string.ascii_lowercase) for _ in range(7))
 
 
-transactiondb = _TransactionDb(MongoClient())
+transactiondb = _TransactionDb(get_mongo_client())

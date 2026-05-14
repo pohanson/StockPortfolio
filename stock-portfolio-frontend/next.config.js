@@ -3,6 +3,7 @@
 module.exports = {
   reactStrictMode: true,
   swcMinify: true,
+  output: 'standalone',
   i18n: { locales: ["en"], defaultLocale: "en" },
   webpack: (config, { dev }) => {
     if (dev) {

@@ -4,6 +4,7 @@ from argon2 import PasswordHasher
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
+from .mongo_client import get_mongo_client
 
 class _UserDb:
     ph = PasswordHasher()
@@ -117,4 +118,4 @@ class _UserDb:
         return verify_result
 
 
-userdb = _UserDb(MongoClient())
+userdb = _UserDb(get_mongo_client())

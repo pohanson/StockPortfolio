@@ -1,0 +1,10 @@
+FROM node:24-slim AS base
+
+WORKDIR /app
+
+# Install dependencies first
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+CMD ["npm", "run", "dev"]

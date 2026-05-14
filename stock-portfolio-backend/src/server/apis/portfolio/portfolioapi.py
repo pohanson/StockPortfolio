@@ -39,5 +39,5 @@ def get_portfolio():
 
     for data in json_data:
         code = data["code"] + ".SI"
-        data["last"] = tickers.tickers[code].basic_info["lastPrice"]
+        data["last"] = tickers.tickers[code].get_info().get("currentPrice", 0)
     return jsonify(json_data)

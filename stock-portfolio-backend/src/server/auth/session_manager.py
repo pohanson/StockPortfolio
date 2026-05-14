@@ -8,7 +8,7 @@ from threading import Lock
 class SessionManager:
     """Singleton Class"""
 
-    ses_user_fp = "./src/server/auth/ses_user.json"
+    ses_user_fp = "./ses_user.json"
     _sessionid_user = {}  # sessionid: userid
 
     _instance = None
