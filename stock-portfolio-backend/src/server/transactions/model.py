@@ -4,7 +4,7 @@ import datetime as dt
 import json
 from typing import Literal, Union
 
-from data.stock_code_name_dict import stock_code_name_dict
+from ..stocks.stock_code_name_dict import stock_code_name_dict
 
 
 class Transaction:
@@ -16,9 +16,9 @@ class Transaction:
         price: float,
         volume: int,
         broker: Literal["poems", "moomoo"],
-        _id: str = None,
-        userid: str = None,
-        last_modified: dt.datetime = None,
+        _id: str = "",
+        userid: str = "NULL_USER",
+        last_modified: dt.datetime | None = None,
     ):
         self.date: dt.date = date
         self.code: str = code
@@ -90,6 +90,7 @@ class Transaction:
         clearing = round(0.0325 / 100 * value, 2)
         trading_access = round(0.0075 / 100 * value, 2)
 
+        sub_sum = 0
         if self.broker == "poems":
             commission = max(25, 0.28 / 100 * value)
             settlement_instruction = 0.35
@@ -116,6 +117,8 @@ class Transaction:
         # It might be in datetime type when being retrieved from database
         if isinstance(_dict.get("date"), dt.datetime):
             _dict["date"] = _dict["date"].date()
+        elif isinstance(_dict.get("date"), str):
+            _dict["date"] = dt.datetime.strptime(_dict["date"], "%Y-%m-%d").date()
 
         return cls(**_dict)
 

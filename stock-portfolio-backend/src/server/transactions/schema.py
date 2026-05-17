@@ -1,25 +1,17 @@
 import datetime as dt
 
-from marshmallow import Schema, fields, post_dump, post_load, validate
+from marshmallow import Schema, fields, post_dump, post_load, validate, validates
 
-from data.stock_code_name_dict import stock_code_name_dict
-from server.model.transaction import Transaction
-
+from .model import Transaction
+from server.stocks.service import get_stock_infos, get_stock_name
 
 class TransactionSchema(Schema):
     _id = fields.String(required=True)
     date = fields.Date("iso", required=True)
-    code = fields.String(
-        required=True,
-        validate=validate.OneOf(
-            stock_code_name_dict.keys(), error="Invalid stock code given."
-        ),
-    )
+    code = fields.String(required=True)
     type_ = fields.String(
         required=True,
-        validate=validate.OneOf(
-            ["buy", "sell"], error="Invalid type_ selected."
-        ),
+        validate=validate.OneOf(["buy", "sell"], error="Invalid type_ selected."),
     )
     price = fields.Float(
         required=True,
@@ -37,7 +29,7 @@ class TransactionSchema(Schema):
     userid = fields.String(required=True)
     last_modified = fields.DateTime(
         "iso",
-        load_default=dt.datetime.utcnow(),
+        load_default=lambda: dt.datetime.utcnow(),
     )
 
     @post_load
@@ -48,7 +40,24 @@ class TransactionSchema(Schema):
     def post_dump(self, data, **kwargs):
         return data
 
+    @validates("code")
+    def validate_code(self, value, **kwargs):
+        if get_stock_name(value) is None:
+            raise ValueError("Invalid stock code given.")
+
 
 class NamedTransactionSchema(TransactionSchema):
     # Includes the name of the stock
-    name = fields.String(required=True)
+    name = fields.Method("get_stock_name")
+
+    def get_stock_name(self, o: Transaction):
+        stock_infos = get_stock_infos([o.code]).get(o.code)
+        if stock_infos is None:
+            return "Unknown Stock"
+        else:
+            return stock_infos.name
+
+
+class CreateTransactionSchema(TransactionSchema):
+    class Meta:
+        exclude = ("_id", "userid")

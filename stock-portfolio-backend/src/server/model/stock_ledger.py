@@ -1,9 +1,9 @@
 import concurrent.futures
 from typing import Any
 
-from data.stock_code_name_dict import stock_code_name_dict
+from server.stocks.service import get_stock_name
 from server.data_structure import SortedSet
-from server.model.transaction import Transaction
+from server.transactions.model import Transaction
 from server.scraper.dividends.calculate_dividends import (
     calc_total_dividend_earnings,
 )
@@ -111,7 +111,7 @@ class _StockRecord:
 
         return {
             "code": self.code,
-            "name": stock_code_name_dict[self.code],
+            "name": get_stock_name(self.code),
             "volume": cur_total_volume,
             "cost": cur_total_cost,
             "avg_price": self.avg_price,
@@ -147,7 +147,7 @@ class _StockRecord:
         )
         return {
             "code": self.code,
-            "name": stock_code_name_dict[self.code],
+            "name": get_stock_name(self.code),
             "volume": calculated_data["volume"],
             "cost": calculated_data["cost"],
             "avg_price": self.avg_price,

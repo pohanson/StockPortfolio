@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from pymongo.results import UpdateResult
 
-from server.model.transaction import Transaction
+from server.transactions.model import Transaction
 from .mongo_client import get_mongo_client
 
 class _TransactionDb:
@@ -87,18 +87,18 @@ class _TransactionDb:
             upsert=True,
         )
 
-    def delete_transaction(self, transaction_id: str) -> Transaction:
+    def delete_transaction(self, transaction_id: str) -> Transaction | None:
         """Delete transaction by id, and insert that transaction into `deleted_transaction` collection
 
         Args:
             transaction_id (str): transaction id string to delete
 
         Returns:
-            Transaction: the transaction that was deleted
+            Transaction | None: the transaction that was deleted, or None if not found
         """
         deleted_transaction = self.coll.find_one_and_delete({"_id": transaction_id})
         if deleted_transaction is None:
-            return
+            return None
         # update last_modified to now
         deleted_transaction["last_modified"] = datetime.utcnow()
         self.deleted_coll.insert_one(deleted_transaction)
