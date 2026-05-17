@@ -1,7 +1,7 @@
-export async function getJsonHandler(fullUrl: string, sessionId = null) {
+export async function getJsonHandler(fullUrl: string, cookie = "") {
   return await fetch(fullUrl, {
     headers: {
-      Cookie: `sessionid=${sessionId}`,
+      Cookie: cookie,
     },
   }).then(async (r) => [r.status, await r.json()]);
 }
@@ -10,14 +10,14 @@ async function sendJson(
   fullUrl: string,
   method: "PUT" | "POST",
   json: JSON,
-  sessionId,
+  cookie = "",
 ) {
   return await fetch(fullUrl, {
     method: method,
     body: JSON.stringify(json),
     headers: {
       "Content-Type": "application/json",
-      Cookie: `sessionid=${sessionId}`,
+      Cookie: cookie,
     },
   }).then(async (r) => [r.status, await r.json()]);
 }
@@ -25,24 +25,20 @@ async function sendJson(
 export async function postJsonHandler(
   fullUrl: string,
   json: JSON,
-  sessionId = null,
+  cookie = "",
 ) {
-  return await sendJson(fullUrl, "POST", json, sessionId);
+  return await sendJson(fullUrl, "POST", json, cookie);
 }
 
-export async function putJsonHandler(
-  fullUrl: string,
-  json: JSON,
-  sessionId = null,
-) {
-  return await sendJson(fullUrl, "PUT", json, sessionId);
+export async function putJsonHandler(fullUrl: string, json: JSON, cookie = "") {
+  return await sendJson(fullUrl, "PUT", json, cookie);
 }
 
-export async function deleteJsonHandler(fullUrl: string, sessionId = null) {
+export async function deleteJsonHandler(fullUrl: string, cookie = "") {
   return await fetch(fullUrl, {
     method: "DELETE",
     headers: {
-      Cookie: `sessionid=${sessionId}`,
+      Cookie: cookie,
     },
   }).then(async (r) => [r.status, await r.json()]);
 }

@@ -12,20 +12,20 @@ export default async function handler(req, res) {
     case "GET":
       [statusCode, json] = await getJsonHandler(
         process.env.API_URL + `/transaction/${transactionId}`,
-        req.cookies.sessionid,
+        req.headers.cookie,
       );
       break;
     case "PUT":
       [statusCode, json] = await putJsonHandler(
         process.env.API_URL + `/transaction/${transactionId}`,
         req.body,
-        req.cookies.sessionid,
+        req.headers.cookie,
       );
       break;
     case "DELETE":
       [statusCode, json] = await deleteJsonHandler(
         process.env.API_URL + `/transaction/${transactionId}`,
-        req.cookies.sessionid,
+        req.headers.cookie,
       );
       break;
   }

@@ -1,12 +1,15 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps } from "next/types";
+import { getJsonHandler } from "../lib/baseApiHandler";
 
 export default function ChecksRedirect() {
   return;
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  let res = await fetch(`${process.env.FRONTEND_SERVER_URL}/api/user`);
-  let user = await res.json();
+  let [statusCode, user] = await getJsonHandler(
+    `${process.env.FRONTEND_SERVER_URL}/api/user`,
+    context.req.headers.cookie || "",
+  );
   if (user.isLogin) {
     return { redirect: { destination: "/portfolio", statusCode: 301 } };
   } else {

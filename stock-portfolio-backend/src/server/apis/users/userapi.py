@@ -1,5 +1,5 @@
 from argon2.exceptions import VerifyMismatchError
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, make_response, request
 
 from server.auth.session_manager import SessionManager
 from server.database.userdb import userdb
@@ -37,11 +37,13 @@ def user_login():
     try:
         if userdb.authenticate_one_user(user_data):
             result = userdb.find_one_user(user_data["username"])
-            result["sessionid"] = session_manager.new_user_ses(
-                str(result["_id"])
-            )
+            session_id = session_manager.new_user_ses(str(result["_id"]))
             result.pop("_id")
-            return jsonify(result), 200
+            response = make_response(jsonify(result), 200)
+            response.set_cookie(
+                "sessionid", session_id, path="/", samesite="Lax", httponly=True
+            )
+            return response
         else:
             raise VerifyMismatchError("Incorrect Login Credentials")
 
@@ -60,8 +62,10 @@ def user_logout():
     Json Response:
         + 200 {"ok": True}
     """
-    session_manager.remove_ses(request.cookies.get("sessionid"))
-    return jsonify({"ok": True})
+    session_manager.remove_ses(request.cookies.get("sessionid", ""))
+    response = make_response(jsonify({"ok": True}), 200)
+    response.delete_cookie("sessionid", path="/")
+    return response
 
 
 @user_api_bp.put("")
