@@ -17,7 +17,7 @@ class middleware:
         sessionid = request.cookies.get("sessionid")
 
         # ignore url that deals with user signup, login, and logout
-        whitelist = ["/api/v0/user"]
+        whitelist = ["/api/v0/user", "/api/v1/user"]
 
         # invalid id or not found means not valid user if not whitelisted url
         if request.path not in whitelist and (

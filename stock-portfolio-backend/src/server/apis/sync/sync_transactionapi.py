@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request
 
 from server.database.transactiondb import transactiondb
 from server.transactions.model import Transaction
-from server.transactions.schema import TransactionSchema
+from server.transactions.api_schema import TransactionSchema
 
 sync_transaction_api_bp = Blueprint(
     "sync_transaction", __name__, url_prefix="sync/transaction"

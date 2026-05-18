@@ -1,6 +1,10 @@
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
-from .schema import CreateTransactionSchema, TransactionSchema, NamedTransactionSchema
+from .api_schema import (
+    CreateTransactionSchema,
+    TransactionSchema,
+    NamedTransactionSchema,
+)
 from .service import (
     get_all_transactions_by_userid,
     insert_transaction,

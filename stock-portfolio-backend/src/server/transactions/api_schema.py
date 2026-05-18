@@ -51,11 +51,11 @@ class NamedTransactionSchema(TransactionSchema):
     name = fields.Method("get_stock_name")
 
     def get_stock_name(self, o: Transaction):
-        stock_infos = get_stock_infos([o.code]).get(o.code)
-        if stock_infos is None:
+        stock_name = get_stock_name(o.code)
+        if stock_name is None:
             return "Unknown Stock"
         else:
-            return stock_infos.name
+            return stock_name
 
 
 class CreateTransactionSchema(TransactionSchema):
