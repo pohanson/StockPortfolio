@@ -9,12 +9,11 @@ export async function getServerSideProps({ req, params }) {
   let sessionid = getCookie("sessionid", { req });
   const { transactionId } = params;
   let data = await fetch(
-    `${process.env.FRONTEND_SERVER_URL}/api/transaction/${transactionId}`,
+    `${process.env.API_URL}/transaction/${transactionId}`,
     {
       headers: { Cookie: `sessionid=${sessionid}` },
     },
   ).then((r) => r.json());
-  data = JSON.parse(data)
   if ("error" in data) {
     return { redirect: { destination: "/login", permanent: false } };
   }
