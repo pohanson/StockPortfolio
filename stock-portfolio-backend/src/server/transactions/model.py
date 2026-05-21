@@ -124,7 +124,9 @@ class Transaction:
         if isinstance(_dict.get("date"), dt.datetime):
             _dict["date"] = _dict["date"].date()
         elif isinstance(_dict.get("date"), str):
-            _dict["date"] = dt.datetime.strptime(_dict["date"], "%Y-%m-%d").date()
+            _dict["date"] = dt.datetime.strptime(
+                _dict["date"], "%Y-%m-%d"
+            ).date()
 
         return cls(**_dict)
 

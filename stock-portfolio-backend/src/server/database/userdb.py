@@ -6,6 +6,7 @@ from pymongo import MongoClient
 
 from .mongo_client import get_mongo_client
 
+
 class _UserDb:
     ph = PasswordHasher()
 

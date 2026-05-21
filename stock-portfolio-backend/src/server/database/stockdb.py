@@ -4,6 +4,7 @@ from pymongo import MongoClient
 
 from .mongo_client import get_mongo_client
 
+
 class _StockDb:
     def __init__(self, client: MongoClient):
         self.coll = client["data"]["stock_data"]

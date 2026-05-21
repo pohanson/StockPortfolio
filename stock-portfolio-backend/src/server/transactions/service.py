@@ -1,5 +1,7 @@
 from server.database.transactiondb import transactiondb
+
 from .model import Transaction
+
 
 def get_all_transactions_by_userid(userid):
     """Get all transactions for a user.
@@ -9,7 +11,9 @@ def get_all_transactions_by_userid(userid):
     Returns:
         list[Transaction]: list of transactions for the user.
     """
-    transactions = transactiondb.find_all_transaction(filter_dict={"userid": userid})
+    transactions = transactiondb.find_all_transaction(
+        filter_dict={"userid": userid}
+    )
     return transactions
 
 
@@ -37,7 +41,9 @@ def insert_transaction(transaction: Transaction) -> Transaction:
     Returns:
         Transaction: the transaction that is inserted with id and last_modified
     """
-    return Transaction.from_dict(transactiondb.insert_one_transaction(transaction))
+    return Transaction.from_dict(
+        transactiondb.insert_one_transaction(transaction)
+    )
 
 
 def delete_transaction(transaction_id: str) -> Transaction | None:

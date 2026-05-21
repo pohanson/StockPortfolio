@@ -1,8 +1,7 @@
 import json
 
-from werkzeug.wrappers import Request, Response
-
 from server.auth.session_manager import SessionManager
+from werkzeug.wrappers import Request, Response
 
 
 class middleware:

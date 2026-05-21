@@ -1,19 +1,24 @@
+import logging
+
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
+
 from .api_schema import (
     CreateTransactionSchema,
-    TransactionSchema,
     NamedTransactionSchema,
+    TransactionSchema,
 )
+from .model import Transaction
 from .service import (
     get_all_transactions_by_userid,
+    get_transaction_by_id,
     insert_transaction,
     update_transaction,
 )
-from .model import Transaction
-import logging
 
-transaction_api_bp = Blueprint("transaction", __name__, url_prefix="transaction")
+transaction_api_bp = Blueprint(
+    "transaction", __name__, url_prefix="transaction"
+)
 
 
 log = logging.getLogger(__name__)
@@ -50,7 +55,9 @@ def get_transaction_id(transaction_id):
     result = get_transaction_by_id(transaction_id)
     if result is None:
         return (
-            jsonify({"error": f"No such transaction '{transaction_id}' was found."}),
+            jsonify(
+                {"error": f"No such transaction '{transaction_id}' was found."}
+            ),
             404,
         )
     schema = NamedTransactionSchema()
@@ -95,7 +102,9 @@ def delete_transaction(transaction_id):
     result = delete_transaction(transaction_id)
     if result is None:
         return (
-            jsonify({"error": f"No such transaction '{transaction_id}' was found."}),
+            jsonify(
+                {"error": f"No such transaction '{transaction_id}' was found."}
+            ),
             404,
         )
     return "", 204
@@ -132,7 +141,9 @@ def put_transaction(transaction_id):
 
     if result is None:
         return (
-            jsonify({"error": f"No such transaction '{transaction_id}' was found."}),
+            jsonify(
+                {"error": f"No such transaction '{transaction_id}' was found."}
+            ),
             404,
         )
     return "", 204

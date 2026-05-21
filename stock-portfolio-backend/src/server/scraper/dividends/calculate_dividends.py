@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup, ResultSet, SoupStrainer
 sys.path.append("src")
 from server.transactions.model import Transaction
 
+
 def _get_dividend_table_rows(stock_code) -> ResultSet:
     res = requests.get(f"https://www.dividends.sg/view/{stock_code}")
 

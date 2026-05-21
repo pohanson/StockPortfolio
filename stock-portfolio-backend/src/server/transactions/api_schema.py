@@ -1,9 +1,17 @@
 import datetime as dt
 
-from marshmallow import Schema, fields, post_dump, post_load, validate, validates
+from marshmallow import (
+    Schema,
+    fields,
+    post_dump,
+    post_load,
+    validate,
+    validates,
+)
+from server.stocks.service import get_stock_name
 
 from .model import Transaction
-from server.stocks.service import get_stock_infos, get_stock_name
+
 
 class TransactionSchema(Schema):
     _id = fields.String(required=True)

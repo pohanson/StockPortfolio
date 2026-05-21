@@ -1,6 +1,5 @@
 from argon2.exceptions import VerifyMismatchError
 from flask import Blueprint, jsonify, make_response, request
-
 from server.auth.session_manager import SessionManager
 from server.database.userdb import userdb
 

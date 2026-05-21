@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields, pre_dump
-from yfinance import Tickers
 from server.portfolio.model import Holding, Portfolio
 from server.stocks.service import get_stock_name
+from yfinance import Tickers
 
 
 class _HoldingSchema(Schema):

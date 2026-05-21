@@ -1,8 +1,7 @@
 from flask import Blueprint, jsonify, request
-from yfinance import Tickers
-
 from server.database.transactiondb import transactiondb
 from server.model.stock_ledger import Ledger
+from yfinance import Tickers
 
 portfolio_api_bp = Blueprint("portfolio", __name__, url_prefix="portfolio")
 

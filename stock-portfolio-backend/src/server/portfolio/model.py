@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Iterable
+
 from server.transactions.model import Transaction
 
 
@@ -38,7 +39,9 @@ class Portfolio:
 
         if transaction.type_ == "buy":
             holding.volume += transaction.volume
-            holding.cost += transaction.price * transaction.volume + transaction.fees
+            holding.cost += (
+                transaction.price * transaction.volume + transaction.fees
+            )
         elif transaction.type_ == "sell":
             if holding.volume == transaction.volume:
                 # fully sold, reset the holding
