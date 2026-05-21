@@ -2,9 +2,9 @@ from flask import Blueprint
 
 from server.portfolio.portfolioapi import portfolio_api_bp as portfolio_api_bp_v0
 from server.earning_reports.api import pnl_api_bp as pnl_api_bp_v0
-from server.apis.sync.sync_transactionapi import sync_transaction_api_bp
+from server.sync.sync_transactionapi import sync_transaction_api_bp
 from server.transactions.api import transaction_api_bp
-from server.apis.users.userapi import user_api_bp
+from server.users.userapi import user_api_bp
 
 from server.portfolio.api import portfolio_api_bp as portfolio_api_bp_v1
 from server.earning_reports.api import pnl_api_bp as pnl_api_bp_v1
