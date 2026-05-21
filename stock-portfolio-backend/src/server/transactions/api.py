@@ -40,7 +40,7 @@ def get_transaction():
 
 
 @transaction_api_bp.get("/<transaction_id>")
-def get_transaction_by_id(transaction_id):
+def get_transaction_id(transaction_id):
     """Get a single transaction based on the id
 
     Json Response:

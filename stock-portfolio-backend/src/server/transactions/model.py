@@ -80,6 +80,12 @@ class Transaction:
     def fees(self) -> float:
         return self.calculate_fees()
 
+    def is_buy(self):
+        return self.type_ == "buy"
+
+    def is_sell(self):
+        return self.type_ == "sell"
+
     def calculate_fees(self) -> float:
         """Calculate all the additional fees imposed by the broker.
 

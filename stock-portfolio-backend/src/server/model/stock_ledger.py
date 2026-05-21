@@ -1,12 +1,12 @@
 import concurrent.futures
 from typing import Any
 
-from server.stocks.service import get_stock_name
-from server.data_structure import SortedSet
-from server.transactions.model import Transaction
+from data_structure import SortedSet
 from server.scraper.dividends.calculate_dividends import (
     calc_total_dividend_earnings,
 )
+from server.stocks.service import get_stock_name
+from server.transactions.model import Transaction
 
 
 class _StockRecord:
