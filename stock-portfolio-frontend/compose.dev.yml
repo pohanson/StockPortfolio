@@ -9,11 +9,11 @@ services:
     environment:
       - NODE_ENV=development
       - FRONTEND_SERVER_URL=http://localhost:3000
-      - API_URL=http://backend:5000/api/v0
+      - API_URL=http://backend:5000/api/v1
     develop:
       watch:
         - path: .
-          action: rebuild
+          action: sync
           target: /app
         - path: ./compose.dev.yml
           action: rebuild

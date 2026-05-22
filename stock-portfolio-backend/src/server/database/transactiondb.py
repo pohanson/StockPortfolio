@@ -7,9 +7,10 @@ import pymongo
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from pymongo.results import UpdateResult
+from server.transactions.model import Transaction
 
-from server.model.transaction import Transaction
 from .mongo_client import get_mongo_client
+
 
 class _TransactionDb:
     def __init__(self, client: MongoClient):
@@ -50,7 +51,9 @@ class _TransactionDb:
         Returns:
             UpdateResult
         """
-        return self.coll.update_one({"_id": transaction_id}, {"$set": data.to_dict()})
+        return self.coll.update_one(
+            {"_id": transaction_id}, {"$set": data.to_dict()}
+        )
 
     def upsert_one_transaction(
         self,
@@ -87,18 +90,20 @@ class _TransactionDb:
             upsert=True,
         )
 
-    def delete_transaction(self, transaction_id: str) -> Transaction:
+    def delete_transaction(self, transaction_id: str) -> Transaction | None:
         """Delete transaction by id, and insert that transaction into `deleted_transaction` collection
 
         Args:
             transaction_id (str): transaction id string to delete
 
         Returns:
-            Transaction: the transaction that was deleted
+            Transaction | None: the transaction that was deleted, or None if not found
         """
-        deleted_transaction = self.coll.find_one_and_delete({"_id": transaction_id})
+        deleted_transaction = self.coll.find_one_and_delete(
+            {"_id": transaction_id}
+        )
         if deleted_transaction is None:
-            return
+            return None
         # update last_modified to now
         deleted_transaction["last_modified"] = datetime.utcnow()
         self.deleted_coll.insert_one(deleted_transaction)
@@ -118,7 +123,9 @@ class _TransactionDb:
         """
         data = [
             Transaction.from_dict(record)
-            for record in self.coll.find(filter_dict).sort("date", pymongo.ASCENDING)
+            for record in self.coll.find(filter_dict).sort(
+                "date", pymongo.ASCENDING
+            )
         ]
         return data
 

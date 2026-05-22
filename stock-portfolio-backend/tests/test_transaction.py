@@ -2,7 +2,6 @@ import datetime
 import unittest
 
 from marshmallow import ValidationError
-
 from src.server.model.transaction import Transaction
 from src.server.model.transaction_schema import TransactionSchema
 

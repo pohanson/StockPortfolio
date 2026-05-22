@@ -1,7 +1,14 @@
 from collections.abc import Generator, Mapping, MutableSet, Sequence
 from typing import Any, Generic, TypeVar, Union
 
-T = TypeVar("T", bound=Mapping)
+from typing_extensions import Protocol
+
+
+class Indexable(Protocol):
+    def __getitem__(self, key: Any) -> Any: ...
+
+
+T = TypeVar("T", bound=Indexable)
 
 
 class SortedSet(Sequence, MutableSet, Generic[T]):

@@ -1,4 +1,8 @@
-export default function BsTransactionTable({ transactions_breakdown }) {
+export default function BsTransactionTable({
+  transactions_breakdown,
+}: {
+  transactions_breakdown: null | [];
+}) {
   return (
     <div>
       <h2>Buy & Sell Transactions</h2>
@@ -32,26 +36,24 @@ export default function BsTransactionTable({ transactions_breakdown }) {
 }
 
 function TransactionRow({ transactionBreakdown }) {
-  let [date, type_, price, volume, value, net] = transactionBreakdown;
-  price = price.toFixed(3);
-  net = net.toFixed(2);
-  value = value.toFixed(2);
+  const [date, type_, price, volume, earnings] = transactionBreakdown;
+  const value = (price * volume).toFixed(2);
   return (
     <tr className="odd:bg-slate-100 even:bg-white">
       <td>{date}</td>
       <td>
         <div className="flex flex-col flex-grow text-sm">
           <p className="text-lg font-semibold leading-tight text-green-600">
-            {type_ == "buy" ? price : " --- "}
+            {type_ == "buy" ? price.toFixed(3) : " --- "}
           </p>
           <p className="font-semibold leading-tight text-red-300">
-            {type_ == "sell" ? price : " --- "}
+            {type_ == "sell" ? price.toFixed(3) : " --- "}
           </p>
         </div>
       </td>
       <td>{volume}</td>
       <td>{value}</td>
-      <td>{net}</td>
+      <td>{earnings.toFixed(2)}</td>
     </tr>
   );
 }

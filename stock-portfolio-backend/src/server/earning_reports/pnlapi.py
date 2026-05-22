@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, request
-
 from server.database.transactiondb import transactiondb
 from server.model.stock_ledger import Ledger
 

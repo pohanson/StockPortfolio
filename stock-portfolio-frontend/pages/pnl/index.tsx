@@ -4,32 +4,43 @@ import { useEffect, useState } from "react";
 import Card from "../../components/Card";
 import LoadingPage from "../../components/Loading";
 
+type PNLReportLineItem = {
+  code: string;
+  name: string;
+  dividend_earnings: number;
+  transaction_earnings: number;
+};
 export default function NetPage() {
   const router = useRouter();
 
-  const [pnlData, setPnlData] = useState(null);
+  const [pnlData, setPnlData] = useState<null | PNLReportLineItem[]>(null);
 
   useEffect(() => {
     fetch("/api/pnl")
-      .then((r) => r.json())
-      .then((json) => {
-        if ("error" in json) {
+      .then((r) => {
+        if (r.status === 401) {
           router.replace("/login");
         } else {
-          setPnlData(json);
+          return r.json();
         }
+      })
+      .then((json) => {
+        setPnlData(json);
       });
   }, [router]);
-  let totalEarnings, totalDividend, totalTransaction;
+  let totalEarnings: number | null = null,
+    totalDividend: number | null = null,
+    totalTransaction: number | null = null;
   if (pnlData != null) {
-    totalTransaction = pnlData
-      .reduce((sum, cur) => sum + cur.transactions_sum, 0)
-      .toFixed(2);
-
-    totalDividend = pnlData
-      .reduce((sum, cur) => sum + cur.dividends_sum, 0)
-      .toFixed(2);
-    totalEarnings = pnlData.reduce((sum, cur) => sum + cur.pnl, 0).toFixed(2);
+    totalTransaction = pnlData.reduce(
+      (sum, cur) => sum + cur.transaction_earnings,
+      0,
+    );
+    totalDividend = pnlData.reduce(
+      (sum, cur) => sum + cur.dividend_earnings,
+      0,
+    );
+    totalEarnings = totalTransaction + totalDividend;
   }
 
   let table = (
@@ -48,9 +59,9 @@ export default function NetPage() {
         {pnlData == null || (
           <tr className="border-t-2 border-black text-end">
             <td className="text-lg font-bold">Total:</td>
-            <td>{totalTransaction}</td>
-            <td>{totalDividend}</td>
-            <td>{totalEarnings}</td>
+            <td>{totalTransaction?.toFixed(2)}</td>
+            <td>{totalDividend?.toFixed(2)}</td>
+            <td>{totalEarnings?.toFixed(2)}</td>
           </tr>
         )}
       </tbody>
@@ -67,7 +78,7 @@ export default function NetPage() {
     ) : (
       <>
         {totalEarnings == null || (
-          <p className="my-4 md:my-8 ml-[10%] font-bold">{`Total Earnings: ${totalEarnings}`}</p>
+          <p className="my-4 md:my-8 ml-[10%] font-bold">{`Total Earnings: ${totalEarnings?.toFixed(2)}`}</p>
         )}
         {table}
       </>
@@ -81,8 +92,8 @@ export default function NetPage() {
   );
 }
 
-function Row({ data }) {
-  let { code, name, pnl, dividends_sum, transactions_sum } = data;
+function Row({ data }: { data: PNLReportLineItem }) {
+  let { code, name, dividend_earnings, transaction_earnings } = data;
 
   return (
     <Link href={`/pnl/${code}`} passHref>
@@ -94,9 +105,9 @@ function Row({ data }) {
           <p className="font-bold ">{name}</p>
           <p className="text-sm text-gray-700">{code}</p>
         </td>
-        <td>{transactions_sum.toFixed(2)}</td>
-        <td>{dividends_sum.toFixed(2)}</td>
-        <td>{pnl.toFixed(2)}</td>
+        <td>{transaction_earnings.toFixed(2)}</td>
+        <td>{dividend_earnings.toFixed(2)}</td>
+        <td>{(transaction_earnings + dividend_earnings).toFixed(2)}</td>
       </a>
     </Link>
   );
