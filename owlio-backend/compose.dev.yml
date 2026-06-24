@@ -1,0 +1,22 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgres://owlio:ow1i0@db:5432/owlio_dev?sslmode=disable
+      - APP_ENV=development
+    depends_on:
+      - db
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: owlio_dev
+      POSTGRES_USER: owlio
+      POSTGRES_PASSWORD: ow1i0
+    ports:
+      - "5433:5432"

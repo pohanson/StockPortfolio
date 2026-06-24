@@ -1,17 +1,26 @@
 package user
 
 import (
+	"context"
 	"owlio-backend/internal/crypto"
 )
 
-var repo UserRepository = NewInMemoryUserRepository()
+type UserService struct {
+	repo UserRepository
+}
 
-func CreateUser(user *User) error {
+func NewUserService(repo UserRepository) *UserService {
+	return &UserService{
+		repo: repo,
+	}
+}
+
+func (s *UserService) CreateUser(user *CreateUser, ctx context.Context) error {
 	hash, err := crypto.HashPassword(user.Password)
 	if err != nil {
 		return err
 	}
 	user.Password = hash
 
-	return repo.SaveUser(user)
+	return s.repo.CreateUser(user, ctx)
 }

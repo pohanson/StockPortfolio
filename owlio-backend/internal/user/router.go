@@ -4,8 +4,7 @@ import (
 	"net/http"
 )
 
-func RegisterUserRouter() http.Handler {
-	mux := http.NewServeMux()
-	mux.HandleFunc("POST /", CreateUserHandler)
+func RegisterUserRouter(mux *http.ServeMux, h *UserHandler) http.Handler {
+	mux.HandleFunc("POST /", h.CreateUserHandler)
 	return mux
 }

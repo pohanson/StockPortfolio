@@ -3,13 +3,24 @@ package user
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"owlio-backend/internal/common/handler"
 )
 
-func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
-	var req CreateUserRequestJson
+type UserHandler struct {
+	service *UserService
+}
+
+func NewUserHandler(service *UserService) *UserHandler {
+	return &UserHandler{
+		service: service,
+	}
+}
+
+func (h *UserHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+	var req CreateUser
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		if errors.Is(err, io.EOF) {
 			handler.ErrorHandler(w, &handler.MissingRequestBody{})
@@ -23,13 +34,14 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		handler.ErrorHandler(w, err)
 		return
 	}
+	fmt.Printf("Received request: %+v\n", req)
 
 	// Process the valid request
-	err := CreateUser(&User{
+	err := h.service.CreateUser(&CreateUser{
 		Name:     req.Name,
 		Username: req.Username,
 		Password: req.Password,
-	})
+	}, r.Context())
 
 	if err != nil {
 		handler.ErrorHandler(w, err)
