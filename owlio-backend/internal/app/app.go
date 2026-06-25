@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"owlio-backend/internal/auth"
 	"owlio-backend/internal/db"
 	"owlio-backend/internal/user"
 )
@@ -31,6 +32,11 @@ func (c *AppContainer) InitDomains() {
 	userService := user.NewUserService(userRepo)
 	userHandler := user.NewUserHandler(userService)
 	user.RegisterUserRouter(c.Mux, userHandler)
+
+	authRepo := auth.NewInMemorySessionRepo()
+	authService := auth.NewAuthService(userRepo, authRepo)
+	authHandler := auth.NewAuthHandler(authService)
+	auth.RegisterAuthRouter(c.Mux, authHandler)
 }
 
 func (c *AppContainer) Close() {
