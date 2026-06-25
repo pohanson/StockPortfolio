@@ -5,6 +5,6 @@ import (
 )
 
 func RegisterUserRouter(mux *http.ServeMux, h *UserHandler) http.Handler {
-	mux.HandleFunc("POST /", h.CreateUserHandler)
+	mux.HandleFunc("POST /user", h.CreateUserHandler)
 	return mux
 }

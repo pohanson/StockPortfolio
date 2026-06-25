@@ -3,6 +3,7 @@ package user
 import (
 	"errors"
 	"fmt"
+	"owlio-backend/internal/common/apperror"
 	"owlio-backend/internal/common/validation"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 )
 
 type User struct {
+	Id        int       `json:"-"`
 	Name      string    `json:"name"`
 	Username  string    `json:"username"`
 	CreatedAt time.Time `json:"created_at"`
@@ -49,7 +51,7 @@ func (r *CreateUser) Validate() error {
 	}
 
 	if len(errs) > 0 {
-		return errors.Join(errs...)
+		return apperror.ErrInvalidRequestBody(errors.Join(errs...))
 	}
 	return nil
 }

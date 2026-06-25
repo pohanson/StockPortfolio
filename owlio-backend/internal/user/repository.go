@@ -8,6 +8,7 @@ import (
 type UserRepository interface {
 	CreateUser(user *CreateUser, ctx context.Context) error
 	GetUserByUsername(username string, ctx context.Context) (*User, bool)
+	GetUserByUsernameWithPassword(username string, ctx context.Context) (*User, string, bool)
 }
 
 type PgUserRepo struct {
@@ -30,9 +31,22 @@ func (r *PgUserRepo) GetUserByUsername(username string, ctx context.Context) (*U
 		return nil, false
 	}
 	return &User{
+		Id:       int(user.ID),
 		Name:     user.Name,
 		Username: user.Username,
 	}, true
+}
+
+func (r *PgUserRepo) GetUserByUsernameWithPassword(username string, ctx context.Context) (*User, string, bool) {
+	user, err := r.q.GetUserByUsername(ctx, username)
+	if err != nil {
+		return nil, "", false
+	}
+	return &User{
+		Id:       int(user.ID),
+		Name:     user.Name,
+		Username: user.Username,
+	}, user.Password, true
 }
 
 func NewPgUserRepo(pool db.DBTX) *PgUserRepo {

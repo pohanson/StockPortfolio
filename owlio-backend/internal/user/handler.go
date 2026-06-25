@@ -2,10 +2,8 @@ package user
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
-	"io"
 	"net/http"
+	"owlio-backend/internal/common/apperror"
 	"owlio-backend/internal/common/handler"
 )
 
@@ -20,31 +18,26 @@ func NewUserHandler(service *UserService) *UserHandler {
 }
 
 func (h *UserHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
-	var req CreateUser
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		if errors.Is(err, io.EOF) {
-			handler.ErrorHandler(w, &handler.MissingRequestBody{})
-		} else {
-			handler.ErrorHandler(w, err)
-		}
+	req, err := handler.ReadJsonBody[CreateUser](r)
+	if err != nil {
+		apperror.APIErrorHandler(w, err)
 		return
 	}
 
 	if err := req.Validate(); err != nil {
-		handler.ErrorHandler(w, err)
+		apperror.APIErrorHandler(w, err)
 		return
 	}
-	fmt.Printf("Received request: %+v\n", req)
 
 	// Process the valid request
-	err := h.service.CreateUser(&CreateUser{
+	err = h.service.CreateUser(&CreateUser{
 		Name:     req.Name,
 		Username: req.Username,
 		Password: req.Password,
 	}, r.Context())
 
 	if err != nil {
-		handler.ErrorHandler(w, err)
+		apperror.APIErrorHandler(w, err)
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
