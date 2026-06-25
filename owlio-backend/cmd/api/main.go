@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"owlio-backend/internal/app"
+	"owlio-backend/internal/middleware"
 )
 
 func main() {
@@ -19,7 +20,12 @@ func main() {
 
 	defer appContainer.Close()
 	appContainer.InitDomains()
+	var apiMux = http.NewServeMux()
+	apiMux.Handle("/api/v1/", http.StripPrefix("/api/v1", appContainer.Mux))
 
-	fmt.Println("Starting server on https://localhost:8000")
-	log.Fatal(http.ListenAndServeTLS(":8000", "./server.crt", "./server.key", appContainer.Mux))
+	muxWithMiddleware := middleware.JSONErrorMiddleware(apiMux)
+	fmt.Println("Starting server on http://localhost:8000")
+	log.Fatal(http.ListenAndServe(":8000", muxWithMiddleware))
+	// Uncomment the following line to enable HTTPS with self-signed certificates
+	// log.Fatal(http.ListenAndServeTLS(":8000", "./server.crt", "./server.key", apiMux))
 }
