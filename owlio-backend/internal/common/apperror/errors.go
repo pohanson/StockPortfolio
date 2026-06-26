@@ -36,6 +36,17 @@ func ErrInvalidRequestBody(err error) *AppError {
 	}
 }
 
+func ErrUnauthorized(err error) *AppError {
+	if err == nil {
+		err = errors.New("unauthorized")
+	}
+	return &AppError{
+		Detail:     "Unauthorized",
+		StatusCode: http.StatusUnauthorized,
+		Err:        err,
+	}
+}
+
 func (e *AppError) Error() string {
 	return e.Detail
 }
@@ -51,6 +62,7 @@ func APIErrorWriter(w http.ResponseWriter, err error) {
 		return
 	}
 
+	// TODO: Do not return err.Error() in production, have other way to log it.
 	writeJSONError(w, http.StatusInternalServerError, err.Error())
 }
 

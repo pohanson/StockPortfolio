@@ -14,7 +14,7 @@ type User struct {
 	ID        int       `json:"-"`
 	Name      string    `json:"name"`
 	Username  string    `json:"username"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"-"`
 }
 
 type CreateUser struct {

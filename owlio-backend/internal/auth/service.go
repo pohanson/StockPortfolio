@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"owlio-backend/internal/common/apperror"
 	"owlio-backend/internal/crypto"
 	"owlio-backend/internal/user"
@@ -67,9 +68,9 @@ func (s *AuthService) CreateSession(user *user.User, ctx context.Context) (*Sess
 	b64token := crypto.EncodeBase64(token)
 
 	session := &Session{
-		UserID:    user.ID,
-		Token:     b64token,
-		createdAt: time.Now(),
+		UserID:     user.ID,
+		SessionKey: b64token,
+		createdAt:  time.Now(),
 	}
 
 	if err := s.sessionRepo.CreateSession(session, ctx); err != nil {
@@ -85,4 +86,13 @@ func (s *AuthService) GetSessionByToken(token string, ctx context.Context) (*Ses
 
 func (s *AuthService) DeleteSessionByToken(token string, ctx context.Context) error {
 	return s.sessionRepo.DeleteSessionByToken(token, ctx)
+}
+
+func (s *AuthService) GetSessionFromRequest(r *http.Request) (*Session, bool) {
+	cookie, err := r.Cookie(SESSION_COOKIE_KEY)
+	if err != nil {
+		return nil, false
+	}
+	return s.sessionRepo.GetSessionByToken(cookie.Value, context.Background())
+
 }

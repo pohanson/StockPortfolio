@@ -9,6 +9,7 @@ type UserRepository interface {
 	CreateUser(user *CreateUser, ctx context.Context) error
 	GetUserByUsername(username string, ctx context.Context) (*User, bool)
 	GetUserByUsernameWithPassword(username string, ctx context.Context) (*User, string, bool)
+	GetUserByID(id int, ctx context.Context) (*User, error)
 }
 
 type PgUserRepo struct {
@@ -35,6 +36,18 @@ func (r *PgUserRepo) GetUserByUsername(username string, ctx context.Context) (*U
 		Name:     user.Name,
 		Username: user.Username,
 	}, true
+}
+
+func (r *PgUserRepo) GetUserByID(id int, ctx context.Context) (*User, error) {
+	user, err := r.q.GetUserByID(ctx, int32(id))
+	if err != nil {
+		return nil, err
+	}
+	return &User{
+		ID:       int(user.ID),
+		Name:     user.Name,
+		Username: user.Username,
+	}, nil
 }
 
 func (r *PgUserRepo) GetUserByUsernameWithPassword(username string, ctx context.Context) (*User, string, bool) {

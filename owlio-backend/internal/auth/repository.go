@@ -19,7 +19,7 @@ func NewInMemorySessionRepo() *InMemorySessionRepo {
 }
 
 func (r *InMemorySessionRepo) CreateSession(session *Session, ctx context.Context) error {
-	r.sessions[session.Token] = session
+	r.sessions[session.SessionKey] = session
 	return nil
 }
 
