@@ -40,21 +40,21 @@ func (e *AppError) Error() string {
 	return e.Detail
 }
 
-func (e *AppError) WriteJson(w http.ResponseWriter) {
-	writeJsonError(w, e.StatusCode, e.Detail)
+func (e *AppError) WriteJSON(w http.ResponseWriter) {
+	writeJSONError(w, e.StatusCode, e.Detail)
 }
 
-func APIErrorHandler(w http.ResponseWriter, err error) {
+func APIErrorWriter(w http.ResponseWriter, err error) {
 	var appErr *AppError
 	if errors.As(err, &appErr) {
-		appErr.WriteJson(w)
+		appErr.WriteJSON(w)
 		return
 	}
 
-	writeJsonError(w, http.StatusInternalServerError, err.Error())
+	writeJSONError(w, http.StatusInternalServerError, err.Error())
 }
 
-func writeJsonError(w http.ResponseWriter, statusCode int, errorMsg string) {
+func writeJSONError(w http.ResponseWriter, statusCode int, errorMsg string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(map[string]string{"error": errorMsg})

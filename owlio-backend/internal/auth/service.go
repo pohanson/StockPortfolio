@@ -67,7 +67,7 @@ func (s *AuthService) CreateSession(user *user.User, ctx context.Context) (*Sess
 	b64token := crypto.EncodeBase64(token)
 
 	session := &Session{
-		UserId:    user.Id,
+		UserId:    user.ID,
 		Token:     b64token,
 		createdAt: time.Now(),
 	}

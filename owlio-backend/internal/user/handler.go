@@ -20,12 +20,12 @@ func NewUserHandler(service *UserService) *UserHandler {
 func (h *UserHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	req, err := handler.ReadJsonBody[CreateUser](r)
 	if err != nil {
-		apperror.APIErrorHandler(w, err)
+		apperror.APIErrorWriter(w, err)
 		return
 	}
 
 	if err := req.Validate(); err != nil {
-		apperror.APIErrorHandler(w, err)
+		apperror.APIErrorWriter(w, err)
 		return
 	}
 
@@ -37,7 +37,7 @@ func (h *UserHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request) 
 	}, r.Context())
 
 	if err != nil {
-		apperror.APIErrorHandler(w, err)
+		apperror.APIErrorWriter(w, err)
 		return
 	}
 	w.WriteHeader(http.StatusCreated)

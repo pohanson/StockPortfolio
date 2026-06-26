@@ -25,13 +25,13 @@ func NewAuthHandler(service *AuthService) *AuthHandler {
 func (h *AuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	loginReq, err := handler.ReadJsonBody[LoginRequest](r)
 	if err != nil {
-		apperror.APIErrorHandler(w, err)
+		apperror.APIErrorWriter(w, err)
 		return
 	}
 
 	session, err := h.service.Login(loginReq.Username, loginReq.Password, r.Context())
 	if err != nil {
-		apperror.APIErrorHandler(w, apperror.ErrInvalidCredentials(err))
+		apperror.APIErrorWriter(w, apperror.ErrInvalidCredentials(err))
 		return
 	}
 

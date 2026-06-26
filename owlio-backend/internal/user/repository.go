@@ -31,7 +31,7 @@ func (r *PgUserRepo) GetUserByUsername(username string, ctx context.Context) (*U
 		return nil, false
 	}
 	return &User{
-		Id:       int(user.ID),
+		ID:       int(user.ID),
 		Name:     user.Name,
 		Username: user.Username,
 	}, true
@@ -43,7 +43,7 @@ func (r *PgUserRepo) GetUserByUsernameWithPassword(username string, ctx context.
 		return nil, "", false
 	}
 	return &User{
-		Id:       int(user.ID),
+		ID:       int(user.ID),
 		Name:     user.Name,
 		Username: user.Username,
 	}, user.Password, true
