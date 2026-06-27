@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"owlio-backend/internal/crypto"
 )
 
 type UserService struct {
@@ -15,12 +14,7 @@ func NewUserService(repo UserRepository) *UserService {
 	}
 }
 
+// TODO: Better error message, currently it exposes internal state.
 func (s *UserService) CreateUser(user *CreateUser, ctx context.Context) error {
-	hash, err := crypto.HashPassword(user.Password)
-	if err != nil {
-		return err
-	}
-	user.Password = hash
-
 	return s.repo.CreateUser(user, ctx)
 }

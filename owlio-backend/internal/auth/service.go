@@ -93,6 +93,6 @@ func (s *AuthService) GetSessionFromRequest(r *http.Request) (*Session, bool) {
 	if err != nil {
 		return nil, false
 	}
-	return s.sessionRepo.GetSessionByToken(cookie.Value, context.Background())
+	return s.sessionRepo.GetSessionByToken(cookie.Value, r.Context())
 
 }

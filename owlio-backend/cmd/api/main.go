@@ -20,10 +20,8 @@ func main() {
 
 	defer appContainer.Close()
 	appContainer.InitDomains()
-	var apiMux = http.NewServeMux()
-	apiMux.Handle("/api/v1/", http.StripPrefix("/api/v1", appContainer.Mux))
 
-	muxWithMiddleware := middleware.JSONErrorMiddleware(apiMux)
+	muxWithMiddleware := middleware.JSONErrorMiddleware(appContainer.Mux)
 	fmt.Println("Starting server on http://localhost:8000")
 	log.Fatal(http.ListenAndServe(":8000", muxWithMiddleware))
 	// Uncomment the following line to enable HTTPS with self-signed certificates
