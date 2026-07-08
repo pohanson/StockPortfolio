@@ -10,7 +10,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     `${process.env.FRONTEND_SERVER_URL}/api/user`,
     context.req.headers.cookie || "",
   );
-  if (user.isLogin) {
+  if (user && user.id) {
     return { redirect: { destination: "/portfolio", statusCode: 301 } };
   } else {
     return { redirect: { destination: "/login", statusCode: 301 } };

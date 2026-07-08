@@ -36,11 +36,13 @@ func JSONErrorMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(srw, r)
 
+		// Only target this 2, as they are returned from library.
 		if srw.statusCode == http.StatusMethodNotAllowed || srw.statusCode == http.StatusNotFound {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(srw.statusCode)
 			json.NewEncoder(w).Encode(map[string]string{"error": strings.TrimSpace(string(srw.storedWrite))})
 		} else {
+			w.WriteHeader(srw.statusCode)
 			w.Write(srw.storedWrite)
 		}
 	})
